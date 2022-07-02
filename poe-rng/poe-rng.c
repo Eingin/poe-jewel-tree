@@ -240,3 +240,75 @@ __int64 tintmt_next(unsigned int *a2, unsigned int a4)
     }
     return (unsigned int)(v20);
 }
+
+__int64 tintmt_next_range(unsigned int *a2, int min, int max)
+{
+    unsigned int v2;  // r9d
+    unsigned int v3;  // r11d
+    unsigned int v4;  // r10d
+    int v5;           // r15d
+    unsigned int v6;  // r12d
+    unsigned int v7;  // edi
+    unsigned int v8;  // ebx
+    unsigned int v9;  // r13d
+    unsigned int v10; // eax
+    int v11;          // ecx
+    unsigned int v12; // ecx
+    unsigned int v13; // edx
+    int v14;          // r8d
+    int v15;          // ebx
+    unsigned int v16; // ecx
+    unsigned int v17; // eax
+    int v18;          // eax
+
+    v2 = min ^ 0x80000000;
+    v3 = (max ^ 0x80000000) - v2;
+    if (v3 == -1)
+    {
+        v13 = a2[2];
+        v14 = a2[3];
+        v15 = a2[4] ^ (2 * a2[4]);
+        v16 = ((a2[1] & 0x7FFFFFFF ^ v14 ^ v13) >> 1) ^ v15 ^ a2[1] & 0x7FFFFFFF ^ v14 ^ v13;
+        a2[1] = v13;
+        a2[4] = v16;
+        a2[2] = v14 ^ -(v16 & 1) & 0x8F7011EE;
+        v17 = v15 ^ (v16 << 10) ^ -(v16 & 1) & 0xFC78FF1F;
+        a2[3] = v17;
+        v18 = (v13 + (v17 >> 8)) ^ v16 ^ -((v13 + (v17 >> 8)) & 1) & 0x3793FDFF;
+        ++*a2;
+    }
+    else
+    {
+        v4 = v3 + 1;
+        if (v3)
+        {
+            v5 = *a2;
+            v6 = a2[1];
+            v7 = a2[4];
+            v8 = a2[2];
+            v9 = a2[3];
+            do
+            {
+                v10 = v6;
+                v6 = v8;
+                ++v5;
+                v11 = v7 ^ (2 * v7);
+                v7 = v10 & 0x7FFFFFFF ^ v9 ^ v8 ^ v11 ^ ((v10 & 0x7FFFFFFF ^ v9 ^ v8) >> 1);
+                v8 = v9 ^ -(((unsigned __int8)(v10 ^ v9 ^ v8 ^ v11) ^ (unsigned __int8)((v10 & 0x7FFFFFFF ^ v9 ^ v8) >> 1)) & 1) & 0x8F7011EE;
+                v9 = v11 ^ (v7 << 10) ^ -(v7 & 1) & 0xFC78FF1F;
+                v12 = v7 ^ (v6 + (v9 >> 8)) ^ -((v6 + (v9 >> 8)) & 1) & 0x3793FDFF;
+            } while (v12 / v4 >= 0xFFFFFFFF / v4 && 0xFFFFFFFF % v4 != v3);
+            a2[1] = v6;
+            a2[4] = v7;
+            a2[2] = v8;
+            a2[3] = v9;
+            *a2 = v5;
+        }
+        else
+        {
+            v12 = 0;
+        }
+        v18 = v12 % v4;
+    }
+    return (v2 + v18) ^ 0x80000000;
+}
